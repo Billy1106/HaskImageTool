@@ -68,7 +68,7 @@ executable HaskImageTool
     -- other-extensions:
 
     -- Other library packages from which modules are imported.
-    build-depends:    base>=4.19.0.0, JuicyPixels
+    build-depends:    base>=4.19.0.0, JuicyPixels>=3.3.8
 
     -- Directories containing source files.
     hs-source-dirs:   app
