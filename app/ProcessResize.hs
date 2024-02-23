@@ -6,8 +6,8 @@ import Data.List (isPrefixOf)
 
 parseDimensions :: [String] -> (Int, Int)
 parseDimensions args =
-    let width = read $ drop 6 $ head [arg | arg <- args, "width=" `isPrefixOf` arg]
-        height = read $ drop 7 $ head [arg | arg <- args, "height=" `isPrefixOf` arg]
+    let width = read $ drop 8 $ head [arg | arg <- args, "--width=" `isPrefixOf` arg]
+        height = read $ drop 9 $ head [arg | arg <- args, "--height=" `isPrefixOf` arg]
     in (width, height)
 
 parseIOPaths :: [String] -> (FilePath, FilePath)

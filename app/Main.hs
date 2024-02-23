@@ -4,6 +4,7 @@ import Codec.Picture()
 import System.Environment (getArgs)
 import Data.List (intercalate)
 import ProcessResize (processResize)
+import ProcessMosaic (processMosaic)
 
 main :: IO ()
 main = do
@@ -13,9 +14,6 @@ main = do
         ("mosaic":params) -> processMosaic params
         ("edge-detection":params) -> processEdgeDetection params
         _ -> putStrLn "Invalid command or parameters."
-
-processMosaic :: [String] -> IO ()
-processMosaic params = putStrLn $ "Applying Mosaic Effect with parameters: " ++ intercalate ", " (parseParams params)
 
 processEdgeDetection :: [String] -> IO ()
 processEdgeDetection params = putStrLn $ "Applying Edge Detection with parameters: " ++ intercalate ", " (parseParams params)
