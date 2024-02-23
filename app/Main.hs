@@ -1,10 +1,27 @@
-import Codec.Picture
+module Main where
+
+import Codec.Picture()
+import System.Environment (getArgs)
+import Data.List (intercalate)
+import ProcessResize (processResize)
 
 main :: IO ()
 main = do
-    -- 画像を読み込む
-    result <- readImage "inputs/cat.jpg"
-    case result of
-        Left err -> putStrLn err
-        Right dynamicImage -> do
-            saveJpgImage 100 "outputs/cat_unprocessed.jpg" dynamicImage
+    args <- getArgs
+    case args of
+        ("resize":params) -> processResize params
+        ("mosaic":params) -> processMosaic params
+        ("edge-detection":params) -> processEdgeDetection params
+        _ -> putStrLn "Invalid command or parameters."
+
+processMosaic :: [String] -> IO ()
+processMosaic params = putStrLn $ "Applying Mosaic Effect with parameters: " ++ intercalate ", " (parseParams params)
+
+processEdgeDetection :: [String] -> IO ()
+processEdgeDetection params = putStrLn $ "Applying Edge Detection with parameters: " ++ intercalate ", " (parseParams params)
+
+parseParams :: [String] -> [String]
+parseParams [] = []
+parseParams (key:value:rest) = (key ++ " " ++ value) : parseParams rest
+parseParams _ = ["Incomplete parameters"]
+
