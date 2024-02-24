@@ -19,6 +19,8 @@ parseIOPaths args = (inputPath, outputPath)
 
 -- Resizing uses "takes nth pixel" strategy.
 resizeImage :: DynamicImage -> Int -> Int -> Image PixelRGB8
+-- generateImage is a function provided by the JuicyPixels library.
+-- It generates a new image by applying a function (getPixel/applyGaussian) to each pixel in the new image.
 resizeImage resizingImage newWidth newHeight = generateImage getPixel newWidth newHeight
   where
     img = convertRGB8 resizingImage

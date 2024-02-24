@@ -4,20 +4,38 @@ import Codec.Picture
 
 -- Gaussian kernel:https://en.wikipedia.org/wiki/Gaussian_function
 -- The kernel is a 3x3 matrix of doubles
+-- generate a tuple of dx and dy for each pixel in the kernel
+--  e.g for a 3x3 kernel, the list will be [(-1, -1), (0, -1), (1, -1), (-1, 0), (0, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
+-- then for each tuple, get the pixel at the x + dx and y + dy coordinates and multiply it by the corresponding value in the kernel
+-- then sum all the pixels to get the new pixel value (foldr is used to sum the pixels)
+-- reminder: foldr f z [a, b, c] = f a (f b (f c z))
 gaussianKernel :: Double -> [[Double]]
 gaussianKernel sigma = 
     [[exp (-(x^2 + y^2) / (2 * sigma^2)) / (2 * pi * sigma^2) | x <- [-1..1]] | y <- [-1..1]]
 
 applyGaussian :: Image PixelRGB8 -> Int -> Int -> PixelRGB8
-    -- generate a tuple of dx and dy for each pixel in the kernel
-    --  e.g for a 3x3 kernel, the list will be [(-1, -1), (0, -1), (1, -1), (-1, 0), (0, 0), (1, 0), (-1, 1), (0, 1), (1, 1)]
-    -- then for each tuple, get the pixel at the x + dx and y + dy coordinates and multiply it by the corresponding value in the kernel
-    -- then sum all the pixels to get the new pixel value (foldr is used to sum the pixels)
-    -- reminder: foldr f z [a, b, c] = f a (f b (f c z))
+    -- Takes the original image (img), the Gaussian kernel (kernel), the coordinates of the pixel 
+    -- to convolve around (x and y), the offsets (dx and dy), and the accumulator (acc).
+        -- e.g [[0.07511361, 0.1238414, 0.07511361],
+        --      [0.1238414, 0.20417996, 0.1238414],
+        --      [0.07511361, 0.1238414, 0.07511361]] = Kernel
+        -- And we want to apply Gaussian blur to a pixel at coordinates (3, 3) in the image.
+        -- For each tuple (dx, dy) in kernelIndices e.g (dx, dy) = (-1, -1):
+            -- This tuple represents an offset of (-1, -1) from the pixel at (3, 3).
+            -- We pass the original image (img), the Gaussian kernel (kernel),
+            -- coordinates of the pixel (3, 3) (x and y), the offset (-1, -1) (dx and dy), and the accumulator (acc) to convolve.
+                -- Neighbor Coordinates: (3 - 1, 3 - 1) = (2, 2)
+                -- Kernel Weight: 0.07511361
+                -- Pixel Value at (2, 2): (r1, g1, b1)
+                -- Weighted Pixel Value: (r1 * 0.07511361, g1 * 0.07511361, b1 * 0.07511361)
+            -- The result of each convolution is accumulated into acc
+            -- After iterating over all tuples (dx, dy) in kernelIndices, the final accumulator value 
+            -- represents the pixel value after Gaussian is applied to the pixel at (3, 3).
+            -- This process needs to be repeated for each pixel in the image, but should be done by callers of applyGaussian.
 applyGaussian img x y = foldr (\(dx, dy) acc -> convolve img kernel x y dx dy acc) (PixelRGB8 0 0 0) kernelIndices
   where
-    kernel = gaussianKernel 1.0  -- Example: Adjust sigma to change the blur strength
-    offset = length kernel `div` 2 -- Offset of the kernel to the center (kernel is always square)
+    kernel = gaussianKernel 1.0
+    offset = length kernel `div` 2
     kernelIndices = [(dx, dy) | dy <- [-offset..offset], dx <- [-offset..offset]]
 
 -- Convolve a single pixel around (x, y) with the Gaussian kernel
@@ -28,8 +46,6 @@ convolve img kernel x y dx dy acc =
     in addWeightedPixel acc (samplePixel, weight)
   where
     offset = length kernel `div` 2 -- Offset of the kernel to the center (kernel is always square)
-
-    -- Ensure x and y values are within the image boundaries
     clampX = clamp 0 (imageWidth img - 1)
     clampY = clamp 0 (imageHeight img - 1)
 
