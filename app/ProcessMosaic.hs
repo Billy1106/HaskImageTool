@@ -4,10 +4,13 @@ import Codec.Picture
 import Data.List (isPrefixOf)
 
 parseIOPaths :: [String] -> (FilePath, FilePath)
-parseIOPaths args =
-    let inputPath = head [drop 8 arg | arg <- args, "--input=" `isPrefixOf` arg]
-        outputPath = head [drop 9 arg | arg <- args, "--output=" `isPrefixOf` arg]
-    in (inputPath, outputPath)
+-- Arg = "--width=800 --height=600 --input=inputs/cat.jpg --output=outputs/resized_cat.png"
+parseIOPaths args = (findPath "--input=", findPath "--output=")
+  where
+    -- A helper function to extract the file path after a specific prefix.
+    findPath prefix = case filter (prefix `isPrefixOf`) args of
+                        (x:_) -> drop (length prefix) x
+                        []    -> error $ prefix ++ " argument not found"
 
 mosaicImage :: Int -> Image PixelRGB8 -> Image PixelRGB8
 mosaicImage blockSize img = generateImage generateMosaic (imageWidth img) (imageHeight img)
