@@ -18,7 +18,7 @@ applyGaussian :: Image PixelRGB8 -> Int -> Int -> PixelRGB8
     -- to convolve around (x and y), the offsets (dx and dy), and the accumulator (acc).
         -- e.g [[0.07511361, 0.1238414, 0.07511361],
         --      [0.1238414, 0.20417996, 0.1238414],
-        --      [0.07511361, 0.1238414, 0.07511361]] = Kernel
+        --      [0.07511361, 0.1238414, 0.07511361]] is the Gaussian kernel for sigma = 1.0
         -- And we want to apply Gaussian blur to a pixel at coordinates (3, 3) in the image.
         -- For each tuple (dx, dy) in kernelIndices e.g (dx, dy) = (-1, -1):
             -- This tuple represents an offset of (-1, -1) from the pixel at (3, 3).
