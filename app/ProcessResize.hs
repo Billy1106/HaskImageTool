@@ -41,7 +41,7 @@ resizeImage img newWidth newHeight = generateImageFromList newWidth newHeight re
     resizedPixels = [pixelAt img (floor $ fromIntegral x * scaleX) (floor $ fromIntegral y * scaleY) | y <- [0..newHeight-1], x <- [0..newWidth-1]]
 
 -- Generate an image from a list of pixels (we can do this by using GenerateImage from JuicyPixels but let's do this manually)
--- Converts a list of PixelRGB8 pixels into an Image by creating a storable vector of pixel data.
+-- Converts a list of PixelRGB8 pixels into an Image by creating a storable vector of pixel data
 generateImageFromList :: Int -> Int -> [PixelRGB8] -> Image PixelRGB8
 generateImageFromList width height pixels =
     -- Image constructor (defined by JuicyPixel) takes the width, height, and a storable vector of pixel data.
