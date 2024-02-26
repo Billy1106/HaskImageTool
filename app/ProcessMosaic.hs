@@ -2,15 +2,7 @@ module ProcessMosaic (processMosaic) where
 
 import Codec.Picture
 import Data.List (isPrefixOf)
-
-parseIOPaths :: [String] -> (FilePath, FilePath)
--- Arg = "--width=800 --height=600 --input=inputs/cat.jpg --output=outputs/resized_cat.png"
-parseIOPaths args = (findPath "--input=", findPath "--output=")
-  where
-    -- A helper function to extract the file path after a specific prefix.
-    findPath prefix = case filter (prefix `isPrefixOf`) args of
-                        (x:_) -> drop (length prefix) x
-                        []    -> error $ prefix ++ " argument not found"
+import FindArgValue (findArgValue, parseIOPaths)
 
 mosaicImage :: Int -> Image PixelRGB8 -> Image PixelRGB8
 mosaicImage blockSize img = generateImage generateMosaic (imageWidth img) (imageHeight img)

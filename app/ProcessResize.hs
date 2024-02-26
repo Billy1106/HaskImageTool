@@ -1,7 +1,7 @@
 module ProcessResize (processResize) where
 
 import Codec.Picture
-import FindArgValue (findArgValue)
+import FindArgValue (findArgValue, parseIOPaths)
 import GaussianOperation (applyGaussian)
 
 parseDimensions :: [String] -> (Int, Int)
@@ -11,11 +11,6 @@ parseDimensions args = (width, height)
     width = read $ findArgValue "--width=" args
     height = read $ findArgValue "--height=" args
 
-parseIOPaths :: [String] -> (FilePath, FilePath)
-parseIOPaths args = (inputPath, outputPath)
-    where
-        inputPath = findArgValue "--input=" args
-        outputPath = findArgValue "--output=" args
 
 -- Resizing uses "takes nth pixel" strategy.
 resizeImage :: DynamicImage -> Int -> Int -> Image PixelRGB8

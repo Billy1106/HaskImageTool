@@ -1,4 +1,4 @@
-module FindArgValue (findArgValue) where
+module FindArgValue (findArgValue, parseIOPaths) where
 
 -- Checks if a string starts with a prefix
 startsWith :: String -> String -> Bool
@@ -19,8 +19,13 @@ findArgValue :: String -> [String] -> String
 -- E.g findArgValue "--output=" ["--input=inputs/cat.jpg", "--output=outputs/resized_cat.png"] => "outputs/resized_cat.png"
 -- If the prefix is found in the list of args, return the first arg that has the prefix removed
 findArgValue prefix args = head [removePrefix prefix arg | arg <- args, startsWith prefix arg]
-
 -- startsWith prefix arg to check if the prefix is present in the arg
     -- If it is, remove the prefix from the arg using removePrefix prefix arg
     -- Return the result of removePrefix prefix arg
 -- If the prefix is not found, return the original string (but this should not happen)
+
+parseIOPaths :: [String] -> (FilePath, FilePath)
+parseIOPaths args = (inputPath, outputPath)
+    where
+        inputPath = findArgValue "--input=" args
+        outputPath = findArgValue "--output=" args

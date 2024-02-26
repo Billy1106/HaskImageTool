@@ -1,5 +1,5 @@
 module ProcessEdgeDetection where
-
+import FindArgValue (parseIOPaths)
 import Codec.Picture
 import Data.List (isPrefixOf)
 
@@ -14,12 +14,6 @@ processEdgeDetection args = do
                 let edgeImg = detectEdges img
                 savePngImage outputPath (ImageRGB8 edgeImg)
                 putStrLn $ "Edge detected image saved to " ++ outputPath
-
-parseIOPaths :: [String] -> (FilePath, FilePath)
-parseIOPaths args =
-    let inputPath = head [drop 8 arg | arg <- args, "--input=" `isPrefixOf` arg]
-        outputPath = head [drop 9 arg | arg <- args, "--output=" `isPrefixOf` arg]
-    in (inputPath, outputPath)
 
 rgbToGrayscale :: PixelRGB8 -> Pixel8
 rgbToGrayscale (PixelRGB8 r g b) = 
