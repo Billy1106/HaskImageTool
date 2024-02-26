@@ -34,7 +34,7 @@ applyGaussian :: Image PixelRGB8 -> Int -> Int -> PixelRGB8
             -- This process needs to be repeated for each pixel in the image, but should be done by callers of applyGaussian.
 applyGaussian img x y = foldr (\(dx, dy) acc -> convolve img kernel x y dx dy acc) (PixelRGB8 0 0 0) kernelIndices
   where
-    kernel = gaussianKernel 1.0
+    kernel = gaussianKernel 0.5
     offset = length kernel `div` 2
     kernelIndices = [(dx, dy) | dy <- [-offset..offset], dx <- [-offset..offset]]
 
